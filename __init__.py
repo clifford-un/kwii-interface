@@ -23,21 +23,31 @@ def profile(username):
     return "{}'s profile".format(username)
 
 
-def test_graphql(query):
-    request = requests.post("http://34.73.50.226/kwii_api/graphql", json={'query': query})
+def test_graphql(query, variables):
+    request = requests.post(
+        "http://34.73.50.226/kwii_api/graphql",
+        json={"query": query, "variables": variables},
+    )
     if request.status_code == 200:
         return request.json()
     else:
-        raise Exception("Query failed to run by returning code of {}. {}".format(request.status_code, query))
+        raise Exception(
+            "Query failed to run by returning code of {}. {}".format(
+                request.status_code, query
+            )
+        )
+
 
 if __name__ == "__main__":
+    username = "higuaran"
+    password = "HolaMundo"
     query = """
-    {
-        authTest {
-            message
+    mutation createToken($username: String!, $password: String!) {
+        createToken(user: {userName: $username, password: $password}) {
+            jwt, user_id
         }
-    }
-    """
-    graphql = test_graphql(query)
-    print(graphql["data"]["authTest"]["message"])
+    }"""
+    variables = {"username": username, "password": password}
+    graphql = test_graphql(query, variables)
+    print(graphql["data"])
     app.run(port=PORT)
