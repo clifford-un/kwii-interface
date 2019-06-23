@@ -1,0 +1,14 @@
+version: "2.1"
+
+services:
+  soap_server:
+    build: .
+    ports:
+      - "8420:8420"
+    command: python soap_server.py
+
+  soap_client:
+    build: .
+    # ports:
+    #   - "8425:8425"
+    command: python soap_client.py
