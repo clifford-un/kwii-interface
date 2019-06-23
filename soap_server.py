@@ -2,7 +2,7 @@ from spyne import Application, rpc, ServiceBase, Iterable, Integer, Unicode, Any
 from spyne.protocol.soap import Soap11
 from spyne.server.wsgi import WsgiApplication
 
-# from typing import Dict
+import os
 import requests
 
 
@@ -109,5 +109,5 @@ if __name__ == "__main__":
     logging.info("listening to http://127.0.0.1:8420")
     logging.info("wsdl is at: http://localhost:8420/?wsdl")
 
-    server = make_server("127.0.0.1", 8420, wsgi_application)
+    server = make_server("0.0.0.0", 8420, wsgi_application)
     server.serve_forever()
