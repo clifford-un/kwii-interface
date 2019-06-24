@@ -1,7 +1,6 @@
 FROM python:3.6.8-alpine
-COPY . /app
+RUN apk add g++ gcc libxml2-dev libxslt-dev musl-dev linux-headers
+ADD requirements.txt /app/
 WORKDIR /app
-RUN apk add g++ gcc libxslt-dev musl-dev linux-headers
-COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
-EXPOSE 8420
+ADD . /app
