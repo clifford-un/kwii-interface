@@ -3,20 +3,24 @@ import json
 from flask import Flask, request
 import requests
 
+url = "http://0.0.0.0:8420/?wsdl"
+client = Client(url)
+
+
 def test_wsdl():
-    url = "http://localhost:8420/?wsdl"
-    client = Client(url)
     # result = client.service.send_message("Juan", "Japon Campeón")
     result = client.service.get_messages()
-    print(result)
+    return result
+
 
 app = Flask(__name__)
+
 
 @app.route("/")
 def index():
     return "Hello World! (kwii-interface)"
 
-    
+
 @app.route("/chat", methods=["POST", "GET"])
 def chat():
     if request.method == "POST":
@@ -29,9 +33,12 @@ def chat():
 def profile(username):
     return "{}'s profile".format(username)
 
+
 @app.route("/test")
 def test():
-    test_wsdl()
+    return test_wsdl()
+
 
 if __name__ == "__main__":
-    app.run(port=8425)
+    app.run(host="0.0.0.0", port=8425)
+
