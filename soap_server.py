@@ -31,8 +31,33 @@ def transform_data(graphql_data=[]):
 
 
 class KwiiService(ServiceBase):
+
     @rpc(Unicode, Unicode, _returns=Unicode)
-    def send_message(ctx, username, message):
+    def login(ctx, username, password):
+        """
+        Kwii authenticate
+
+        @return an error if username and password are incorrect or return a JWT.
+        """
+
+        query = """
+        mutation createToken($userName: String!, $password: String!) {
+            createToken(user: {userName: $userName, password: $password}) {
+                jwt, user_id, user_name
+            }
+        }"""
+        variables = {
+            "userName": username,
+            "password": password
+        }
+        result = send_graphql(query, variables)
+        if result["data"] is None:
+            return "Something went wrong!"
+        else:
+            return result["data"]["createToken"]["jwt"]
+
+    @rpc(Unicode, Unicode, Unicode, _returns=Unicode)
+    def send_message(ctx, username, message, token):
         """
         Kwii send message
 
@@ -52,7 +77,7 @@ class KwiiService(ServiceBase):
         }"""
         variables = {
             "chat_text": username + "+" + message,
-            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1NjEyMjk4MzEsImV4cCI6MTU2MTMxNjIzMSwiYXVkIjoiQ2xpZmZvcmQtVU4iLCJpc3MiOiJDbGlmZm9yZC1VTiIsInN1YiI6Ikdyb3VwQiJ9.4bC7Q13EMjvhGlI-DS3Qy-vEkMOshMyrBk_KDLxcrRY",
+            "token": token
         }
         result = send_graphql(query, variables)
         if result["data"] is None:
@@ -60,12 +85,12 @@ class KwiiService(ServiceBase):
         else:
             return "Message sent"
 
-    @rpc(_returns=Unicode)
-    def get_messages(ctx):
+    @rpc(Unicode, _returns=Unicode)
+    def get_messages(ctx, token):
         """
         Kwii get all messages
 
-        @return an array with dictionaries (json) {"username": "", "message": "", date: ""} 
+        @return an String (format: array with dictionaries) {"username": "", "message": "", date: ""} 
         """
 
         query = """
@@ -77,10 +102,10 @@ class KwiiService(ServiceBase):
             }
         }"""
         variables = {
-            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1NjEyMjk4MzEsImV4cCI6MTU2MTMxNjIzMSwiYXVkIjoiQ2xpZmZvcmQtVU4iLCJpc3MiOiJDbGlmZm9yZC1VTiIsInN1YiI6Ikdyb3VwQiJ9.4bC7Q13EMjvhGlI-DS3Qy-vEkMOshMyrBk_KDLxcrRY"
+            "token": token
         }
         result = send_graphql(query, variables)
-        if result["data"] is None:
+        if result["data"]["chatById"] is None:
             return "Something went wrong!"
         else:
             result = result["data"]["chatById"]
