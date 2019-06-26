@@ -7,8 +7,8 @@ services:
       - "8420:8420"
     command: python soap_server.py
 
-  # soap_client:
-  #   build: .
-  #   ports:
-  #     - "8425:8425"
-  #   command: python soap_client.py
+  soap_client:
+    build: .
+    ports:
+      - "8425:8425"
+    command: python soap_client.py
