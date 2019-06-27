@@ -8,7 +8,7 @@ import requests
 
 def send_graphql(query, variables):
     request = requests.post(
-        "https://34.73.50.226/kwii_api/graphql",
+        "http://kwii-api/graphql",
         json={"query": query, "variables": variables},
     )
     if request.status_code == 200:
