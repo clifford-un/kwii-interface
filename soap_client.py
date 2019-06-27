@@ -27,9 +27,9 @@ def wsdl_get_posts(email):
         result = result["soap:Envelope"]["soap:Body"]["tns:getPostsResponse"]
         tweets = []
         for k, v in result.items():
-            tweets.append(json.dumps(v))
+            tweets.append(v)
         
-        return Response(response=str(tweets), status=200)
+        return Response(response=json.dumps((tweets)), status=200, mimetype="application/json")
     else:
         result = '{"error": "Correo invalido"}'
         return Response(response=result, status=500, mimetype="application/json")
