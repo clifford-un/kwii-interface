@@ -67,8 +67,8 @@ class KwiiService(ServiceBase):
 
         query = """
         mutation createChat($chat_text: String!, $token: String!){
-            createChat(chat: {chat_user_origin: 5,
-            chat_room_id: "5d0e838124aa9a000170b7bd",
+            createChat(chat: {chat_user_origin: 4,
+            chat_room_id: "5d1421a1b9d82100018c3cc6",
             chat_text: $chat_text},
             token: $token
             username: "GroupB") {
@@ -95,7 +95,7 @@ class KwiiService(ServiceBase):
 
         query = """
         query chatById($token: String!){
-            chatById(chat_room_id: "5d0e838124aa9a000170b7bd",
+            chatById(chat_room_id: "5d1421a1b9d82100018c3cc6",
             token: $token
             username: "GroupB") {
                 chat_text, chat_date_stamp
