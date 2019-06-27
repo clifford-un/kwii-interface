@@ -1,4 +1,4 @@
-from flask import Flask, request, Response
+from flask import Flask, request, Response, jsonify
 import json
 import requests
 import xmltodict
@@ -24,10 +24,12 @@ def wsdl_get_posts(email):
     if response.status_code == 200:
         text = response.text
         result = xmltodict.parse(text)
-        result = json.dumps(
-            result["soap:Envelope"]["soap:Body"]["tns:getPostsResponse"]
-        )
-        return Response(response=result, status=200, mimetype="application/json")
+        result = result["soap:Envelope"]["soap:Body"]["tns:getPostsResponse"]
+        tweets = []
+        for k, v in result.items():
+            tweets.append(json.dumps(v))
+        
+        return Response(response=str(tweets), status=200)
     else:
         result = '{"error": "Correo invalido"}'
         return Response(response=result, status=500, mimetype="application/json")
